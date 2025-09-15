@@ -1,0 +1,20 @@
+### Feature Engineering Suggestions
+
+| Feature Name             | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                 |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| **power_to_weight**      | `horsepower / curb_weight`                                              | Measures acceleration performance; critical for sports/luxury pricing.        | Strong correlation between horsepower and price (r≈0.81); weight impacts handling efficiency. Higher ratios indicate premium performance vehicles. |
+| **diesel_efficiency**    | `highway_mpg * is_diesel`<br>(where `is_diesel = 1 if fuel-type=="diesel" else 0`) | Highlights diesel's fuel economy advantage for highway driving.               | EDA shows diesel vehicles achieve higher highway-MPG despite higher compression ratios. Captures operational cost benefits. |
+| **safety_performance**   | `(-symboling) * horsepower`                                             | Quantifies premium segment: high-power, low-risk vehicles.                    | Safer vehicles (negative symboling) trend toward higher prices; multiplied by horsepower to target luxury-performance market. |
+| **footprint**            | `length * width` (sq inches)                                            | Regulatory class indicator affecting safety/fuel standards.                   | Length/width strongly correlate with weight (r>0.85). Larger footprints imply stability and interior space, influencing price segments. |
+| **turbo_penalty**        | `city_mpg * is_turbo`<br>(where `is_turbo = 1 if aspiration=="turbo" else 0`) | Measures turbocharging's urban efficiency trade-off.                          | Turbo engines have 44% higher avg. horsepower but lower MPG. Critical for cost-conscious buyers. |
+| **cylinder_vol**         | `(π * (bore/2)^2 * stroke) * num_of_cylinders`                          | Engine displacement validation; detects data errors.                          | Should align with `engine-size`; outliers indicate measurement issues. Diesel engines may show divergence. |
+| **luxury_density**       | `curb_weight / (length * width * height)` (lb/cu in)                    | Build quality proxy; high density suggests premium materials/safety.          | Rear-engine vehicles (Porsche) show exceptional density. Correlates with safety (symboling) and price. |
+| **highway_efficiency**   | `highway_mpg - city_mpg`                                                | Highlights aerodynamic optimization for long-distance travel.                 | Diesel vehicles show larger gaps (avg +8 MPG). Key for fleet/commuter buyers. |
+
+---
+
+### Rationale Summary
+- **Performance & Pricing**: `power_to_weight` and `safety_performance` directly link to premium pricing (r≈0.87 for engine-size/price). These capture engineering investments in speed/safety demanded by luxury buyers.
+- **Efficiency Segmentation**: `diesel_efficiency` and `turbo_penalty` quantify fuel economy trade-offs. Diesel dominates highway efficiency; turbo boosts power but penalizes city MPG – crucial for operational cost models.
+- **Regulatory & Safety**: `footprint` and `luxury_density` reflect NHTSA/IIHS classification principles. Larger footprints improve stability; high density indicates robust construction, reducing insurance risk (symboling).
+- **Data Validation**: `cylinder_vol` cross-validates engine metrics, detecting outliers like diesel compression ratios or measurement errors.

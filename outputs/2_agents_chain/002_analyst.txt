@@ -1,0 +1,57 @@
+### 1. Variable Analysis (Individual Breakdown)
+- **symboling** (int64): Insurance risk rating (-3=low risk, 3=high risk). Discrete values with mean=0.83 (slight positive skew). Mode=0 indicates most vehicles are average risk.  
+- **normalized-losses** (float64): Relative average loss payment per insured vehicle year (unitless). Range 65-256, 20% missing. Mean=122, right-skewed (skew=0.77). High std (35.4) suggests varied risk profiles.  
+- **make** (object): Vehicle manufacturer (e.g., Toyota=32, Nissan=18). 22 unique brands; Toyota dominates.  
+- **fuel-type** (object): Fuel type (gas=185, diesel=20). Gasoline is predominant.  
+- **aspiration** (object): Engine air intake (std=168, turbo=37). Naturally aspirated engines are more common.  
+- **num-of-doors** (Int64): Door count (two or four). 2 missing values. Four doors dominate (mode=4, freq=75%).  
+- **body-style** (object): Vehicle shape (sedan=96, hatchback=70). Sedans are most frequent; convertibles rare.  
+- **drive-wheels** (object): Drivetrain (fwd=120, rwd=76, 4wd=9). Front-wheel drive is prevalent.  
+- **engine-location** (object): Engine placement (front=202, rear=3). Rear engines are rare outliers.  
+- **wheel-base** (float64): Distance between wheel centers (inches). Range 86.6–120.9, mean=98.8. Right-skewed (skew=1.05).  
+- **length** (float64): Vehicle length (inches). Range 141.1–208.1, mean=174. Near-symmetric distribution (skew=0.16).  
+- **width** (float64): Vehicle width (inches). Range 60.3–72.3, mean=65.9. Right-skewed (skew=0.90).  
+- **height** (float64): Vehicle height (inches). Range 47.8–59.8, mean=53.7. Symmetric (skew=0.06).  
+- **curb-weight** (float64): Vehicle weight without occupants (lbs). Range 1488–4066, mean=2555.6. Right-skewed (skew=0.68).  
+- **engine-type** (object): Engine design (ohc=148, ohcf=15). Overhead cam (OHC) dominates.  
+- **num-of-cylinders** (Int64): Cylinder count (four=most frequent). 12-cylinder engines are rare outliers. Strong right skew (2.82).  
+- **engine-size** (float64): Engine displacement (cubic inches). Range 61–326, mean=126.9. Highly right-skewed (skew=1.95); max=326 is an outlier.  
+- **fuel-system** (object): Fuel delivery (mpfi=94, 2bbl=66). Multi-point injection is common.  
+- **bore** (float64): Cylinder diameter (inches). Range 2.54–3.94, 4 missing. Mean=3.33, symmetric (skew=0.02).  
+- **stroke** (float64): Piston travel length (inches). Range 2.07–4.17, 4 missing. Mean=3.26, left-skewed (skew=-0.68).  
+- **compression-ratio** (float64): Engine compression (unitless). Range 7–23, mean=10.14. Extreme right skew (2.61); max=23 is an outlier (possibly diesel engines).  
+- **horsepower** (float64): Engine power (HP). Range 48–288, 2 missing. Mean=104.3, right-skewed (skew=1.39). Max=288 is an outlier.  
+- **peak-rpm** (float64): RPM at max horsepower. Range 4150–6600, 2 missing. Mean=5125, symmetric (skew=0.07).  
+- **city-mpg** (int64): City fuel efficiency (miles/gallon). Range 13–49, mean=25.2. Right-skewed (skew=0.66).  
+- **highway-mpg** (int64): Highway fuel efficiency (miles/gallon). Range 16–54, mean=30.8. Right-skewed (skew=0.54).  
+- **price** (float64): Vehicle price (USD). Range 5118–45400, 4 missing. Mean=$13,207, highly right-skewed (skew=1.81). Max=$45,400 is an outlier.  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies  
+- **Strong Correlations**:  
+  - **Dimensions & Weight**: `length`, `width`, `wheel-base`, and `curb-weight` likely correlate positively (e.g., larger vehicles are heavier).  
+  - **Engine & Performance**: `engine-size`, `horsepower`, and `price` show positive correlation (larger engines → higher power → higher cost).  
+  - **Efficiency Trade-offs**: `city-mpg` and `highway-mpg` negatively correlate with `engine-size`/`horsepower` (powerful engines reduce fuel efficiency).  
+  - **Aspiration Impact**: Turbo (`aspiration=turbo`) likely links to higher `horsepower` and `compression-ratio`.  
+
+- **Anomalies/Outliers**:  
+  - **compression-ratio=23**: Far exceeds typical gasoline engines (usually 8–12), suggesting diesel outliers.  
+  - **horsepower=288** and **engine-size=326**: Extreme values indicating high-performance outliers (e.g., sports cars).  
+  - **price=$45,400**: Luxury vehicle outlier (mean=$13,207).  
+  - **rear-engine vehicles (n=3)**: Rare configuration, likely impacting `drive-wheels` (RWD) and `price`.  
+
+- **Trends**:  
+  - Most vehicles are front-engine, FWD, gasoline sedans with OHC engines.  
+  - Diesel vehicles (20/205) have higher `compression-ratio` and potentially better `highway-mpg`.  
+
+---
+
+### 3. Enrichment Recommendations  
+- **Safety Ratings**: Add NHTSA/IIHS crash-test scores to correlate with `symboling` and `body-style`.  
+- **Emissions Data**: Include CO₂ emissions (EPA data) to enhance `fuel-type` and `mpg` analysis.  
+- **Vehicle Class**: Add segment (e.g., SUV, compact) using `length`/`curb-weight` thresholds to analyze trends.  
+- **Market Data**: Incorporate model year or sales volume (via VIN decoders) to contextualize `price` outliers.  
+- **Technology Features**: Add transmission type (manual/automatic) or hybrid flags to explain `mpg` variance.  
+- **Geographic Origin**: Map `make` to country (e.g., Toyota→Japan) to explore regional engineering trends.  
+- **Missing Values**: Source `normalized-losses` from insurance databases using `make` and `engine-size`.

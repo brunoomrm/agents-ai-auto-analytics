@@ -1,0 +1,36 @@
+### Feature Engineering Suggestions
+
+| Feature Name              | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                                             |
+|---------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / curb-weight`                                              | Critical performance metric: Higher ratio indicates better acceleration and sportier vehicles.                                               | EDA shows strong correlation between horsepower and price (r≈0.8). Combining with curb-weight captures dynamic performance beyond raw power, explaining premium pricing.     |
+| **Engine Efficiency Index** | `horsepower / engine-size`                                             | Measures engine design efficiency: Higher values indicate more power per unit displacement.                                                  | EDA reveals engine-size as top price driver (r≈0.9). This ratio highlights technologically advanced engines (e.g., turbocharged) that command price premiums.              |
+| **Size Index**            | `(length * width * height) / 1000`                                     | Quantifies interior space and vehicle class. Larger vehicles typically have higher utility and price.                                         | Strong size-weight correlation exists. SUVs/trucks (larger size index) often have higher price points than compact cars.                                                    |
+| **Highway-City MPG Gap**  | `highway-mpg - city-mpg`                                                | Indicates drivetrain optimization: Larger gaps suggest highway-optimized designs (e.g., RWD sports cars).                                     | EDA shows performance features (RWD/turbo) correlate with larger MPG gaps. Helps segment performance vs. commuter vehicles.                                                |
+| **Cylinder Efficiency**   | `horsepower / num-of-cylinders`                                         | Measures per-cylinder performance. High values indicate advanced engineering (e.g., turbo/supercharging).                                     | 12-cylinder outliers have lower per-cylinder output. Highlights engineering sophistication beyond cylinder count.                                                          |
+| **Premium Drivetrain Flag**| `1 if (drive-wheels == 'RWD') or (aspiration == 'turbo') else 0`        | Flags performance/luxury configurations associated with higher prices and insurance risk.                                                     | EDA shows RWD/turbo vehicles command premium prices. Combines two key luxury indicators into one feature.                                                                  |
+| **Diesel Indicator**      | `1 if (compression-ratio > 15) and (fuel-type == 'diesel') else 0`      | Identifies diesel engines (high compression) for better torque/fuel economy. Validates compression-ratio outliers.                            | Compression-ratio=23 anomaly aligns with diesel engines. Diesel vehicles have distinct pricing and maintenance profiles.                                                   |
+| **Footprint Ratio**       | `(length * width) / curb-weight`                                        | Measures structural efficiency: Higher values indicate lighter construction per area (e.g., sports cars).                                     | Sports cars (low weight relative to footprint) correlate with higher insurance risk (symboling). Captures safety-design tradeoffs.                                          |
+| **Safety-Risk Score**     | `symboling * normalized-losses` (after missing-data imputation)         | Combines insurance risk and loss severity for comprehensive safety assessment.                                                                | Both features relate to crash performance. Product term amplifies high-risk vehicles (e.g., sports cars with high losses).                                                  |
+| **Engine Placement Flag** | `1 if engine-location == 'rear' else 0`                                 | Flags rare rear-engine designs (e.g., Porsche 911) with unique handling characteristics.                                                      | Only 3 rear-engine vehicles exist. These command extreme price premiums and affect driving dynamics.                                                                       |
+| **Fuel System Efficiency**| `city-mpg / engine-size`                                                | Measures fuel system effectiveness in urban conditions. Higher values indicate efficient small engines.                                        | MPFI systems (94 cars) show better efficiency than 2BBL. Explains fuel economy variance beyond engine size alone.                                                          |
+
+### External Enrichment Suggestions
+| Feature Name              | Source                         | Justification                                                                 |
+|---------------------------|--------------------------------|-------------------------------------------------------------------------------|
+| **NHTSA Safety Rating**   | NHTSA database linked by make  | Explains symboling variance and validates insurance loss predictions.         |
+| **CO₂ Emissions**         | EPA datasets                   | Critical for regulatory compliance and electric/hybrid market segmentation.   |
+| **Vehicle Class**         | Industry taxonomy (e.g., SUV)  | Enables body-style refinement (e.g., "crossover" vs "full-size SUV").         |
+
+### Rationale Summary
+- **Performance Features** (Power-to-Weight, Engine Efficiency): Directly linked to premium pricing and market positioning. EDA shows engine metrics dominate price variance.
+- **Efficiency Metrics** (MPG Gap, Cylinder Efficiency): Capture engineering tradeoffs between power and fuel economy, explaining price differences in similar-sized vehicles.
+- **Market Segmentation** (Premium Drivetrain, Diesel, Rear-Engine): Identify niche segments (luxury/sports cars) with distinct pricing and risk profiles.
+- **Safety Integration**: Combines insurance metrics to quantify crash performance, addressing symboling's business relevance.
+- **Size/Space Features**: Reflect consumer utility preferences, where larger/interior volumes command higher prices despite lower efficiency.
+
+Key features leverage EDA insights:  
+1. Strong engine-performance-price correlations  
+2. RWD/turbo premium pricing effect  
+3. Diesel compression ratio validation  
+4. Size-weight interdependencies  
+Enrichments address critical gaps in safety interpretation and regulatory factors.

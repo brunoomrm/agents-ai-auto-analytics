@@ -1,0 +1,24 @@
+### Explanation for This Car's Prediction
+**Why the predicted price is $35,873 (vs. actual $41,315):**  
+The model estimated a lower price primarily due to this car's specific features:  
+- **Fuel efficiency**: With **22 highway-mpg**, this car uses more fuel than average. Lower efficiency often reduces price, as buyers prioritize cost-effective vehicles.  
+- **Brand (BMW)**: While BMW is a premium brand (which typically *increases* price), this specific model’s other features may have offset that premium in the model’s calculation.  
+- **Engine size**: The **209.0 engine-size** is substantial (usually adds value), but combined with low fuel efficiency, the model may have "discounted" the price for higher operating costs.  
+- **Engine type (OHC)**: Overhead camshaft engines are common and reliable, but not a major price booster.  
+- **Fuel efficiency index (18.7)**: This custom metric (lower = worse efficiency) reinforced the impact of the poor fuel economy, pulling the prediction down.  
+
+**Reliability of this prediction:**  
+The error ($5,441 underprediction) is larger than the model’s typical mistake ($2,627). While BMW is a common brand (generally reliable for predictions), the combination of **low fuel efficiency + large engine** might be less frequent in training data. This could make the prediction slightly less certain.  
+
+---
+
+### What the Overall Metrics Mean for You  
+- **Typical error (RMSE: $2,627)**:  
+  For most cars, the model’s predictions are within **$2,627 of the actual price**. Use this as a "margin of error" when estimating values.  
+- **Explanatory power (R²: 0.912)**:  
+  The model explains **91% of price variations** across vehicles. This means it captures nearly all key factors (brand, efficiency, engine, etc.) that determine pricing, making it highly reliable for bulk decisions (e.g., inventory pricing or market analysis).  
+
+**For buyers/sellers**:  
+- Buyers can trust the model to flag over/underpriced vehicles.  
+- Sellers can use it to set competitive prices, knowing predictions are usually within ~$2,600 of market value.  
+- Large errors (like this BMW) are uncommon but remind users to double-check rare feature combinations.

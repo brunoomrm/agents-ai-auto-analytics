@@ -1,0 +1,40 @@
+### Explanation for This Car's Predicted Price  
+The model predicted this Toyota's price at **$8,213** (very close to the actual price of **$8,238**). Here’s why:  
+
+#### Key Features Driving the Prediction:  
+1. **High Fuel Efficiency (34 highway-mpg)**  
+   - This car gets excellent gas mileage on highways. High efficiency *typically lowers the price* because it often comes from smaller, less powerful engines (which are cheaper to produce).  
+
+2. **Small Engine Size (98.0)**  
+   - A smaller engine reduces manufacturing costs and is less powerful. This *lowers the price* compared to larger engines.  
+
+3. **Toyota Brand**  
+   - Toyota is known for reliability and common availability. While reputable, it’s not a luxury brand, so it *avoids premium pricing* like you’d see with luxury makes.  
+
+4. **Standard Engine Type (OHC)**  
+   - "Overhead Cam" engines are common and affordable to produce. This *keeps costs down* versus rarer, high-performance engine types.  
+
+5. **Light Weight (2204 lbs curb weight)**  
+   - Lighter cars use less material and often have simpler designs, which *reduces production costs*.  
+
+**Why is it affordable?**  
+The combination of a small, efficient engine, lightweight build, and non-luxury brand signals an economical vehicle. The model "expects" these features to lower the price.  
+
+#### Prediction Reliability:  
+- **High confidence:** Toyota is a common brand, and all features (like engine size and MPG) fall within typical ranges seen in the data.  
+- **No red flags:** No rare features (e.g., a luxury brand or extreme engine size) that could make the prediction less certain.  
+
+---
+
+### What the Overall Metrics Mean for You:  
+- **Typical Prediction Error (Test RMSE: $2,747):**  
+  On average, the model’s predictions are off by **±$2,747** vs. real prices. For context:  
+  - If predicting a $10,000 car, the actual price might range between **$7,253–$12,747**.  
+  - *Use this as a "margin of error" when budgeting or negotiating.*  
+
+- **Explanatory Power (Test R²: 0.904):**  
+  The model explains **90.4%** of what makes car prices vary. This means:  
+  - Features like engine size, brand, and MPG capture *most* reasons for price differences.  
+  - *It’s reliable for comparing cars, but unseen factors (e.g., vehicle history) still play a small role.*  
+
+These metrics show the model is **strong for real-world use**—especially for common vehicles like this Toyota—but always pair it with expert judgment for final decisions.

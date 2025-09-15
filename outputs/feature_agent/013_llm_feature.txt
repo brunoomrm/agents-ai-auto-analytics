@@ -1,0 +1,27 @@
+Based on the dataset schema and EDA findings, here are 10 well-justified engineered features with automotive domain reasoning:
+
+| Feature Name               | Formula/Recipe                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                                                                                 |
+|----------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio**  | `horsepower / curb-weight`                                                    | Quantifies vehicle performance potential. Higher ratios command premium pricing. | Horsepower (mean=104) and curb-weight (mean=2555) strongly influence performance. Sports cars like Porsche have high ratios. EDA shows horsepower skew (1.39) indicates performance outliers. |
+| **Engine Displacement**    | `(π/4) * bore² * stroke * num-of-cylinders`                                   | Fundamental engine size metric affecting power, emissions, and price.          | Bore (mean=3.33) and stroke (mean=3.26) have low missing rates (1.95%). Displacement standardizes engine characteristics better than engine-size alone (skew=1.95). |
+| **Fuel Efficiency Index**  | `(city-mpg * 0.55) + (highway-mpg * 0.45)`                                    | Real-world fuel economy proxy impacting operating costs and desirability.      | EPA uses weighted averages for fuel economy ratings. City MPG (mean=25.2) and highway MPG (mean=30.8) are complete with low skew (<0.7). |
+| **Luxury Brand Indicator** | `1 if make in [bmw, mercedes-benz, jaguar, audi, porsche] else 0`             | Captures brand premium effect on pricing beyond technical specs.               | Make has 22 categories (Toyota=32 freq). Luxury brands command price premiums (e.g., Porsche price max=45,400 vs avg=13,207). |
+| **Aerodynamic Ratio**      | `width / height`                                                              | Indicates stability and drag efficiency affecting performance and fuel economy. | Width (mean=65.9) and height (mean=53.7) have complete data. Sports cars have higher ratios (e.g., Porsche 911: 72.0/51.2=1.41 vs SUV avg=1.2). |
+| **Turbo Premium**          | `1 if aspiration='turbo' else 0`                                              | Flags forced-induction engines that boost performance and manufacturing cost. | Turbo vehicles (37/205) typically have higher compression ratios (mean CR=8.9 vs std=7.5) and horsepower (mean=128 vs 97). |
+| **Cylinder Efficiency**    | `horsepower / num-of-cylinders`                                               | Measures per-cylinder output efficiency indicating advanced engineering.       | High-efficiency engines (e.g., Honda VTEC) produce >40 HP/cylinder. EDA shows horsepower varies widely (48-288) while cylinders cluster at 4 (mode). |
+| **Safety Composite**       | `(3 - symboling) * normalized-losses` (after missing imputation)              | Combines insurance risk and loss data to quantify safety economics.            | Symboling (-3 safest to 3 riskiest) and normalized-losses (mean=122) both relate to crash costs. Negative correlation with price expected. |
+| **Footprint Area**         | `wheel-base * width`                                                          | Represents vehicle stability and interior space utilization.                   | Wheel-base (mean=98.8) and width (mean=65.9) are complete. Larger footprints correlate with luxury/SUV segments (e.g., Volvo 265 wagon: 109.1 WB). |
+| **Diesel Premium**         | `1 if fuel-type='diesel' and engine-type='ohc' else 0`                        | Flags modern diesel engines with higher torque and fuel economy.               | Diesel engines (20/205) with OHC design (148 freq) have better efficiency. Higher compression ratios (diesel mean CR=20.5 vs gas 8.7) justify price premiums. |
+
+**Key Engineering Insights**:
+1. **Performance Focus**: Power-to-weight and turbo features target performance segments where pricing is nonlinear (horsepower skew=1.39)
+2. **Efficiency Metrics**: Weighted MPG and cylinder efficiency capture fuel economy tech (critical for post-oil-crisis market)
+3. **Brand Economics**: Luxury indicator isolates brand溢价 beyond technical specs
+4. **Safety Integration**: Composite feature combines symboling and loss data (20% missing requires imputation)
+5. **Engine Physics**: Displacement standardizes bore/stroke/cylinders into fundamental engineering parameter
+
+**Handling Constraints**:
+- All features use existing columns per guidelines
+- External enrichment not required (safety composite uses internal insurance metrics)
+- Diesel premium combines fuel-type and engine-type for specificity
+- Addresses skew via ratios (power-to-weight) instead of raw horsepower

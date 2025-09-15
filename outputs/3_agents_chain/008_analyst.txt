@@ -1,0 +1,123 @@
+### 1. Variable Explanations  
+1. **symboling** (int64):  
+   - Likely represents an insurance risk rating (-3 = lowest risk, 3 = highest risk).  
+   - Distribution: Slight right skew (skew=0.21), mode=0. Most vehicles cluster near neutral risk.  
+
+2. **normalized-losses** (float64):  
+   - Average loss payments per insured vehicle year (units: arbitrary index).  
+   - Missing 20% of values. Right-skewed (skew=0.77), mode=161. High-value outliers (max=256).  
+
+3. **make** (object):  
+   - Vehicle manufacturer (e.g., Toyota, BMW). Toyota dominates (32 entries).  
+
+4. **fuel-type** (object):  
+   - Fuel type: gas (90%) or diesel (10%).  
+
+5. **aspiration** (object):  
+   - Engine aspiration: standard (82%) or turbocharged (18%).  
+
+6. **num-of-doors** (Int64):  
+   - Door count: 2 or 4. Stored numerically (2=two, 4=four). Mode=4 (four doors). Missing 2 values.  
+
+7. **body-style** (object):  
+   - Vehicle body type. Sedan (47%) and hatchback (34%) most common.  
+
+8. **drive-wheels** (object):  
+   - Drivetrain: fwd (58%), rwd (37%), 4wd (5%).  
+
+9. **engine-location** (object):  
+   - Engine placement: front (98.5%) or rear (1.5%). Rear-engine vehicles are rare outliers.  
+
+10. **wheel-base** (float64):  
+    - Distance between axles (inches). Right-skewed (skew=1.05), mode=94.5. Range: 86.6–120.9.  
+
+11. **length** (float64):  
+    - Vehicle length (inches). Near-normal distribution (skew=0.16), mode=157.3.  
+
+12. **width** (float64):  
+    - Vehicle width (inches). Right-skewed (skew=0.90), mode=63.8.  
+
+13. **height** (float64):  
+    - Vehicle height (inches). Symmetric (skew=0.06), mode=50.8.  
+
+14. **curb-weight** (float64):  
+    - Vehicle weight without occupants (lbs). Right-skewed (skew=0.68), mode=2385. Range: 1488–4066.  
+
+15. **engine-type** (object):  
+    - Engine design. OHC (72%) most common.  
+
+16. **num-of-cylinders** (Int64):  
+    - Cylinder count (2–12). Stored numerically. Highly right-skewed (skew=2.82), mode=4.  
+
+17. **engine-size** (float64):  
+    - Engine displacement (cubic inches). Right-skewed (skew=1.95), mode=92. Outliers at high end (max=326).  
+
+18. **fuel-system** (object):  
+    - Fuel delivery system. MPFI (46%) and 2BBL (32%) dominate.  
+
+19. **bore** (float64):  
+    - Cylinder diameter (inches). Near-normal (skew=0.02). Missing 4 values.  
+
+20. **stroke** (float64):  
+    - Piston travel length (inches). Left-skewed (skew=-0.68). Missing 4 values.  
+
+21. **compression-ratio** (float64):  
+    - Engine compression ratio. Extreme right skew (skew=2.61) with outlier at 23 (diesel engines).  
+
+22. **horsepower** (float64):  
+    - Engine power (HP). Right-skewed (skew=1.39), mode=68. Missing 2 values.  
+
+23. **peak-rpm** (float64):  
+    - RPM for max horsepower. Symmetric (skew=0.07), mode=5500. Missing 2 values.  
+
+24. **city-mpg** (int64):  
+    - City fuel efficiency (MPG). Right-skewed (skew=0.66), mode=31.  
+
+25. **highway-mpg** (int64):  
+    - Highway fuel efficiency (MPG). Right-skewed (skew=0.54), mode=25.  
+
+26. **price** (float64):  
+    - Retail price (USD). Highly right-skewed (skew=1.81) with luxury outliers (max=$45,400). Missing 4 values.  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies  
+- **Physical Dimensions**:  
+  - Strong positive correlations expected between `wheel-base`, `length`, `width`, `height`, and `curb-weight` (e.g., larger vehicles are heavier).  
+  - `curb-weight` and `engine-size` likely correlate positively (heavy vehicles need larger engines).  
+
+- **Performance and Efficiency**:  
+  - Negative correlation: `horsepower` vs. `city-mpg`/`highway-mpg` (high power reduces efficiency).  
+  - Positive correlation: `compression-ratio` and `fuel-type` (diesel engines have higher ratios, per outlier at 23).  
+  - Anomaly: Diesel vehicles (20 entries) may cluster in high `compression-ratio` and low `horsepower`.  
+
+- **Risk and Pricing**:  
+  - `symboling` (risk) may correlate with `price` (luxury/sports cars = higher risk) or `horsepower`.  
+  - `price` outliers (e.g., $45,400) likely link to high `engine-size`, turbo `aspiration`, or RWD/`rear` `engine-location`.  
+
+- **Anomalies**:  
+  - Only 3 rear-engine vehicles (e.g., Porsche 911).  
+  - `num-of-cylinders`=12 (extremely rare) and `compression-ratio`=23 (diesel outlier).  
+  - Missing values in `normalized-losses` (20%) require investigation.  
+
+---
+
+### 3. Enrichment Recommendations  
+1. **Safety Ratings** (e.g., NHTSA/IIHS):  
+   - Join via `make` to enrich `symboling` analysis. Explains insurance risk.  
+
+2. **Emissions Data** (EPA):  
+   - Add CO₂ emissions (grams/mile) using `fuel-type` and `engine-size`. Complements `city-mpg`/`highway-mpg`.  
+
+3. **Vehicle Class Segmentation**:  
+   - Add "vehicle class" (subcompact, SUV, etc.) using `curb-weight` and `body-style` for better grouping.  
+
+4. **Market Context**:  
+   - Incorporate "model year" (missing) to analyze depreciation and tech trends.  
+   - Add "sales volume" per `make` to identify market leaders.  
+
+5. **Technical Specifications**:  
+   - Include "torque" (lb-ft) to pair with `horsepower` for performance analysis.  
+   - Add "transmission type" (manual/automatic) to explain `peak-rpm` efficiency.  
+
+**Key Variables to Enrich**: `symboling` (safety data), `normalized-losses` (theft/crash stats), `price` (model year), `fuel-type` (emissions).

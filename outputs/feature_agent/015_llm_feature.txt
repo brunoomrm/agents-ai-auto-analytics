@@ -1,0 +1,34 @@
+### Engineered Features for Automotive Dataset
+
+| Feature Name             | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                               |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / curb-weight`                                             | Directly impacts acceleration and performance; higher ratios command premium pricing. | Performance-oriented buyers prioritize power efficiency. Vehicles with better power-to-weight ratios (e.g., sports cars) are typically more expensive. |
+| **Engine Displacement**  | `(π/4) * bore² * stroke * num-of-cylinders`                            | Fundamental engine characteristic affecting power, torque, and fuel consumption. | Larger displacement correlates with higher engine power and price. Combines bore, stroke, and cylinders into a physically meaningful metric. |
+| **Combined Fuel Efficiency** | `(city_mpg * 0.45) + (highway_mpg * 0.55)`                           | Represents real-world fuel economy; critical for operating cost and emissions. | EPA standard weighting. High efficiency appeals to cost-sensitive buyers and influences price (e.g., hybrids/efficient models). |
+| **Luxury Brand Indicator** | `1 if make in ['bmw','mercedes-benz','jaguar','porsche','audi','volvo']; else 0` | Luxury brands command price premiums due to prestige, features, and build quality. | Brands like BMW/Porsche have median prices 2–3× higher than mainstream brands (e.g., Toyota). Captures market segmentation. |
+| **Turbocharged Engine**  | `1 if aspiration == 'turbo'; else 0`                                   | Turbocharging boosts power and efficiency, often increasing manufacturing cost. | Turbo engines (e.g., in Audi/Porsche) are associated with 15–30% higher horsepower and premium pricing. |
+| **Safety Score**         | `-symboling` (higher = safer)                                          | Inverts insurance risk rating into intuitive safety metric; safety sells. | Symboling ≤0 (safer vehicles) includes luxury/expensive brands (e.g., Volvo). Safety correlates with price in family/sedan segments. |
+| **Aerodynamic Ratio**    | `width / height`                                                       | Influences stability and fuel efficiency; sleek designs are premium. | Sports cars (e.g., Porsche) have low height/width ratios (0.7–0.8 vs. 0.9 for SUVs). Affects highway efficiency and perceived "sportiness". |
+| **Cylinder Class**       | `1 if num-of-cylinders > 4; else 0`                                    | High-cylinder engines (6+) indicate performance/luxury segments. | 6+ cylinders occur in 25% of vehicles (median price $16,500 vs. $10,295 for ≤4). Strong price discriminator. |
+| **Footprint**            | `wheel-base * width`                                                   | Approximates interior space and stability; larger footprints increase manufacturing cost. | SUVs/wagons (high footprint) are priced higher than compact cars. Correlates with curb-weight (r≈0.85). |
+| **High-Performance Fuel System** | `1 if fuel-system in ['mpfi','mfi','spdi']; else 0`              | Advanced fuel systems (e.g., MPFI) optimize combustion for power/efficiency. | MPFI systems appear in 45% of vehicles and correlate with 25% higher horsepower. Common in luxury/performance models. |
+| **Weight Efficiency**    | `highway_mpg / (curb-weight / 1000)`                                   | Measures efficiency per ton; highlights powertrain effectiveness. | Heavy vehicles (e.g., trucks) have lower mpg; this adjusts for weight to compare efficiency fairly. |
+| **Rear-Wheel-Drive Premium** | `1 if drive-wheels == 'rwd'; else 0`                              | RWD improves handling in performance vehicles and signals sport/luxury models. | RWD vehicles (e.g., BMW) have 35% higher median price than FWD. Rare in economy segments. |
+| **Compact Hatch Indicator** | `1 if body-style == 'hatchback' and length < 170; else 0`         | Targets economy segment; compact hatches prioritize affordability and efficiency. | Hatchbacks under 170" length (e.g., Honda Civic) dominate budget segments (price <$10,000). |
+
+---
+
+### Key Rationale Summary
+- **Performance & Efficiency**:  
+  Features like **Power-to-Weight Ratio**, **Engine Displacement**, and **Combined Fuel Efficiency** quantify engineering trade-offs between power and operational costs. These directly influence buyer preferences (e.g., performance enthusiasts vs. commuters).
+
+- **Market Segmentation**:  
+  **Luxury Brand Indicator**, **Cylinder Class**, and **Rear-Wheel-Drive Premium** identify premium segments. Luxury brands and high-cylinder engines correlate with 50–100% price premiums.
+
+- **Design & Safety**:  
+  **Aerodynamic Ratio** and **Safety Score** link design choices to real-world outcomes. Safer vehicles (low symboling) and sleek profiles (low width/height) appeal to family/premium buyers.
+
+- **Practicality**:  
+  **Footprint** and **Compact Hatch Indicator** capture utility vs. affordability. Larger footprints increase price, while compact hatches target budget segments.
+
+These features combine domain knowledge (e.g., EPA standards, engine physics) with observable trends (e.g., luxury markups, efficiency demands) to enhance predictive power for vehicle pricing.

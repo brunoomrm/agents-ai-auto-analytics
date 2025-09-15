@@ -1,0 +1,29 @@
+### Proposed Feature Engineering Suggestions
+
+| Feature Name               | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                                                                                 |
+|----------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **power_to_weight_ratio**  | `horsepower / curb-weight`                                              | Measures vehicle performance efficiency; higher ratio indicates better acceleration and driving dynamics. | Analyst found strong positive correlation between engine-size/horsepower and curb-weight. This ratio quantifies performance potential while accounting for vehicle mass. |
+| **size_index**             | `length * width * height`                                               | Represents overall vehicle footprint, influencing interior space, stability, and aerodynamics. | Dimensions (length/width/height) correlate with curb-weight. Combining them captures spatial efficiency beyond individual metrics. |
+| **epa_combined_mpg**       | `1 / (0.55/city-mpg + 0.45/highway-mpg)`                                | Standard EPA fuel efficiency metric reflecting real-world usage patterns. | Analyst noted negative correlation between mpg and engine power. This weighted harmonic mean provides a unified efficiency metric. |
+| **is_performance_package** | `1 if (aspiration=='turbo' OR num-of-cylinders>=6 OR engine-location=='rear') else 0` | Flags high-performance variants for market segmentation and pricing analysis. | Turbocharged engines avg 25% more HP; 12-cylinder/RWD vehicles are luxury outliers; rear engines (e.g., Porsche) denote performance models. |
+| **cylinder_design_ratio**  | `bore / stroke`                                                         | Indicates engine characteristics: >1 (oversquare) for high-RPM power, <1 for torque. | Bore/stroke distributions show low skew. Ratio helps differentiate engine types (e.g., sports vs utility) beyond displacement. |
+| **rwd_premium_factor**     | `price if drive-wheels=='rwd' else null`                                | Isolates price premium for rear-wheel-drive vehicles in luxury/performance segments. | RWD vehicles have 80% higher avg price than FWD. Captures market perception of drivetrain desirability. |
+| **safety_risk_score**      | `(symboling + 3) * normalized-losses` (after missing value imputation) | Combines actuarial risk rating with loss data for comprehensive safety assessment. | Symboling (-3 to 3) and normalized-losses both measure safety. Product amplifies high-risk vehicles (e.g., high-loss with positive symboling). |
+| **displacement_per_cyl**   | `engine-size / num-of-cylinders`                                        | Reveals engineering approach (e.g., large cylinders for torque vs small for efficiency). | High skew in engine-size (max 326) and cylinders (max 12). Normalizes displacement for fair comparison across engine configurations. |
+| **diesel_efficiency_boost**| `compression-ratio / 10 if fuel-type=='diesel' else compression-ratio` | Adjusts for diesel's inherently higher compression ratios when comparing efficiency. | Diesel compression-ratio=23 is an outlier vs gasoline (7-12). Scaling enables cross-fuel efficiency analysis. |
+| **stability_index**        | `wheel-base / (height * 0.5)`                                           | Estimates center of gravity and rollover risk; higher values indicate better stability. | Wheel-base affects stability; ratio with height approximates critical stability metric used in automotive engineering. |
+
+---
+
+### Key Rationale Summary
+- **Performance & Efficiency**: Features like `power_to_weight_ratio`, `epa_combined_mpg`, and `displacement_per_cyl` directly address core automotive trade-offs between power, weight, and fuel efficiency. These help model performance-oriented vs economy segments.
+  
+- **Market Segmentation**: Flags like `is_performance_package` and `rwd_premium_factor` leverage analyst findings on turbo/RWD/premium pricing anomalies to isolate high-margin vehicle categories.
+
+- **Domain-Specific Metrics**: `cylinder_design_ratio` and `stability_index` incorporate mechanical engineering principles (bore/stroke dynamics, center of gravity) that influence driving behavior beyond basic specs.
+
+- **Safety Integration**: `safety_risk_score` combines symbolic risk ratings with actual loss data, addressing insurance cost prediction needs highlighted in variable interpretations.
+
+- **Data Anomaly Handling**: `diesel_efficiency_boost` explicitly adjusts for compression-ratio outliers, ensuring diesel vehicles aren't misclassified as inefficient.
+
+Features prioritize actionable insights from analyst trends (e.g., turbo-RWD-performance links) while introducing physically meaningful composites (size/stability indices) to enhance model interpretability.

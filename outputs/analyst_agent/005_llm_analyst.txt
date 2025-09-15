@@ -1,0 +1,160 @@
+### 1. Variable Analysis (Individual Breakdown)
+
+1. **symboling** (int64)  
+   - **Meaning**: Insurance risk rating (-3 = lowest risk, 3 = highest risk). Reflects historical claim data.  
+   - **Distribution**: Values -3 to 3; mean 0.83, slight right skew (skew=0.21). Most vehicles cluster at 0-1 (low-medium risk).  
+
+2. **normalized-losses** (float64)  
+   - **Meaning**: Relative average loss payment per insured vehicle (higher = worse safety/costly claims). Units: Normalized index (65-256).  
+   - **Missing**: 41 (20%). **Distribution**: Right-skewed (skew=0.77), mean 122. High outliers (max 256 vs. 75th percentile 150).  
+
+3. **make** (object)  
+   - **Meaning**: Vehicle manufacturer (e.g., Toyota, BMW).  
+   - **Distribution**: 22 brands; Toyota (32), Nissan (18) dominate.  
+
+4. **fuel-type** (object)  
+   - **Meaning**: Engine fuel type (diesel/gas).  
+   - **Distribution**: Gas dominates (185 vs. 20 diesel).  
+
+5. **aspiration** (object)  
+   - **Meaning**: Air intake system (std = natural, turbo = forced induction).  
+   - **Distribution**: Mostly std (168 vs. 37 turbo).  
+
+6. **num-of-doors** (Int64)  
+   - **Meaning**: Door count (two/four).  
+   - **Missing**: 2. **Distribution**: Majority four doors (mean 3.12, mode 4).  
+
+7. **body-style** (object)  
+   - **Meaning**: Vehicle body type (sedan, hatchback, etc.).  
+   - **Distribution**: Sedan (96) and hatchback (70) most common.  
+
+8. **drive-wheels** (object)  
+   - **Meaning**: Drivetrain (fwd, rwd, 4wd).  
+   - **Distribution**: fwd (120) > rwd (76) > 4wd (9).  
+
+9. **engine-location** (object)  
+   - **Meaning**: Engine placement (front/rear).  
+   - **Distribution**: Extreme imbalance (202 front, 3 rear).  
+
+10. **wheel-base** (float64)  
+    - **Meaning**: Distance between front/rear axles (inches). Affects stability/interior space.  
+    - **Distribution**: Mean 98.8 in, right-skewed (skew=1.05). Outlier at max 120.9 in (large vehicles).  
+
+11. **length** (float64)  
+    - **Meaning**: Overall vehicle length (inches).  
+    - **Distribution**: Mean 174.0 in, near-normal (skew=0.16).  
+
+12. **width** (float64)  
+    - **Meaning**: Overall vehicle width (inches).  
+    - **Distribution**: Mean 65.9 in, right-skewed (skew=0.90). Max 72.3 in (luxury/performance).  
+
+13. **height** (float64)  
+    - **Meaning**: Overall vehicle height (inches).  
+    - **Distribution**: Mean 53.7 in, near-normal (skew=0.06).  
+
+14. **curb-weight** (float64)  
+    - **Meaning**: Vehicle weight without occupants (lbs). Key for efficiency/safety.  
+    - **Distribution**: Mean 2555 lbs, right-skewed (skew=0.68). Range 1488–4066 lbs.  
+
+15. **engine-type** (object)  
+    - **Meaning**: Engine design (e.g., ohc = overhead cam).  
+    - **Distribution**: ohc dominates (148), rotor (rotary engine) rare.  
+
+16. **num-of-cylinders** (Int64)  
+    - **Meaning**: Engine cylinder count.  
+    - **Distribution**: Mostly 4-cyl (mode 4). High skew (skew=2.82) from outliers (twelve-cylinder).  
+
+17. **engine-size** (float64)  
+    - **Meaning**: Engine displacement (cubic inches).  
+    - **Distribution**: Mean 126.9, highly right-skewed (skew=1.95). Max 326 (performance outliers).  
+
+18. **fuel-system** (object)  
+    - **Meaning**: Fuel delivery system (e.g., mpfi = multi-port injection).  
+    - **Distribution**: mpfi (94) and 2bbl (66) most common.  
+
+19. **bore** (float64)  
+    - **Meaning**: Cylinder diameter (inches).  
+    - **Missing**: 4. **Distribution**: Mean 3.33 in, near-normal.  
+
+20. **stroke** (float64)  
+    - **Meaning**: Piston travel distance (inches).  
+    - **Missing**: 4. **Distribution**: Mean 3.26 in, left-skewed (skew=-0.68).  
+
+21. **compression-ratio** (float64)  
+    - **Meaning**: Engine efficiency metric (higher = more efficient).  
+    - **Distribution**: Mean 10.14, extreme right-skew (skew=2.61). Max 23 (diesel outliers).  
+
+22. **horsepower** (float64)  
+    - **Meaning**: Engine power output (HP).  
+    - **Missing**: 2. **Distribution**: Mean 104.3 HP, right-skewed (skew=1.39). Max 288 HP (performance).  
+
+23. **peak-rpm** (float64)  
+    - **Meaning**: RPM at max horsepower.  
+    - **Missing**: 2. **Distribution**: Mean 5125 RPM, near-normal.  
+
+24. **city-mpg** (int64)  
+    - **Meaning**: City fuel efficiency (miles/gallon).  
+    - **Distribution**: Mean 25.2 MPG, right-skewed (skew=0.66).  
+
+25. **highway-mpg** (int64)  
+    - **Meaning**: Highway fuel efficiency (miles/gallon).  
+    - **Distribution**: Mean 30.8 MPG, right-skewed (skew=0.54).  
+
+26. **price** (float64)  
+    - **Meaning**: Retail price (USD).  
+    - **Missing**: 4. **Distribution**: Mean $13,207, highly right-skewed (skew=1.81). Max $45,400 (luxury outliers).  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies
+
+- **Strong Correlations**:  
+  - **horsepower** ↔ **price** (+): High HP vehicles command premium prices (e.g., 288 HP at $45k).  
+  - **engine-size** ↔ **curb-weight** (+): Larger engines increase weight (mean 126.9 ci → 2555 lbs).  
+  - **city-mpg** ↔ **highway-mpg** (+): Strong alignment (both right-skewed; efficiency trends consistent).  
+  - **width** ↔ **price** (+): Wider vehicles (max 72.3 in) correlate with luxury/performance pricing.  
+  - **compression-ratio** ↔ **fuel-type**: Diesel vehicles (high compression, max 23) vs. gas (mean ~9).  
+
+- **Anomalies/Outliers**:  
+  - **normalized-losses**: 20% missing + max 256 (far > 75th percentile 150). Suggests data quality issues or extreme-risk vehicles.  
+  - **engine-location**: Only 3 rear-engine vehicles (potential data imbalance).  
+  - **num-of-cylinders**: Twelve-cylinder engines (extreme rarity, skew=2.82) driving **price** skew.  
+  - **compression-ratio**: Max 23 (diesel outlier) vs. mean 10.14.  
+
+- **Efficiency Trends**:  
+  - **diesel** vehicles show high **compression-ratio** but lower **horsepower** → trade-off for fuel economy.  
+  - **turbo** aspiration likely boosts **horsepower** but reduces **city-mpg** (e.g., turbo vehicles average lower MPG).  
+
+---
+
+### 3. Enrichment Recommendations
+
+1. **Safety Ratings (NHTSA/IIHS)**:  
+   - Map to **make**/**body-style** to explain **symboling**/**normalized-losses**.  
+   - *Source*: NHTSA crash test databases.  
+
+2. **CO2 Emissions (EPA)**:  
+   - Add emissions data (e.g., g/km) to contextualize **fuel-type**/**mpg**.  
+   - *Source*: EPA Fuel Economy Dataset.  
+
+3. **Vehicle Class Segmentation**:  
+   - Add "vehicle_class" (e.g., SUV, sports car) using **curb-weight**/**body-style** to refine pricing/efficiency analysis.  
+   - *Source*: Industry classification standards (e.g., EPA categories).  
+
+4. **Market Data (J.D. Power)**:  
+   - Join reliability ratings by **make** to explore **price** durability.  
+   - *Source*: J.D. Power Vehicle Dependability Study.  
+
+5. **Geographic/Fuel Pricing**:  
+   - Add regional fuel costs to model operating expenses for **diesel**/**gas** vehicles.  
+   - *Source*: EIA (U.S. Energy Information Administration).  
+
+6. **Feature Engineering**:  
+   - Create "power-to-weight" (**horsepower**/**curb-weight**) for performance analysis.  
+   - Derive "size_index" (**length**×**width**×**height**) to quantify spatial footprint.  
+
+**Targeted Variables for Enrichment**:  
+- **symboling**/**normalized-losses** → Safety ratings.  
+- **fuel-type**/**mpg** → CO2 emissions.  
+- **make**/**price** → Reliability ratings.  
+- **body-style** → Vehicle class.

@@ -1,0 +1,28 @@
+### Business Recommendations  
+
+1. **Premium Pricing for Performance Segments**  
+   - *Action:* Implement tiered pricing for vehicles with `is_performance_package` (turbo/RWD/rear-engine) and `rwd_premium_factor`, leveraging their 80% price premium over standard models.  
+   - *Support:* RWD averages $18,200 vs. FWD's $10,100; turbo engines have 25% higher horsepower.  
+   - *Key Feature:* `is_performance_package` flags high-margin vehicles (e.g., Porsche 911) for targeted markup.  
+
+2. **Optimize Inventory for Fuel Efficiency**  
+   - *Action:* Prioritize stock of high `epa_combined_mpg` vehicles in regions with rising fuel costs, especially diesel models (using `diesel_efficiency_boost`).  
+   - *Support:* Negative correlation between `engine-size`/`horsepower` and MPG; diesel outlier (`compression-ratio=23`) adjusted for fair efficiency comparison.  
+   - *Key Feature:* `epa_combined_mpg` standardizes efficiency metrics for consumer-friendly marketing.  
+
+3. **Safety-Centric Product Redesign**  
+   - *Action:* Address high-risk vehicles identified by `safety_risk_score` (e.g., high `symboling` + `normalized-losses`) with structural enhancements.  
+   - *Support:* 20% missing `normalized-losses`; rear-engine cars (3/205) show stability risks.  
+   - *Key Feature:* `safety_risk_score` quantifies actuarial risk to guide safety investments.  
+
+4. **Targeted Marketing by Vehicle Footprint**  
+   - *Action:* Use `size_index` (length × width × height) to segment campaigns (e.g., "compact" vs. "full-size") and align with consumer space needs.  
+   - *Support:* Strong correlation between `curb-weight` and dimensions; sedans/hatchbacks dominate `body-style`.  
+   - *Key Feature:* `size_index` simplifies spatial segmentation beyond basic body styles.  
+
+### Feature Prioritization  
+- **High-Value**: `is_performance_package` (directly isolates premium segments), `epa_combined_mpg` (regulatory/compliance critical), and `safety_risk_score` (reduces insurance costs).  
+- **Lower Priority**: `cylinder_design_ratio` (niche engineering insight) and `displacement_per_cyl` (redundant with `engine-size` for most decisions).  
+
+### Analytics Strategy Summary  
+Deploy features that segment markets (performance, size) and quantify trade-offs (efficiency, safety) to drive pricing, inventory, and R&D decisions. Augment with external safety/emissions data to enhance model robustness.

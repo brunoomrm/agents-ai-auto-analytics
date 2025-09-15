@@ -1,0 +1,34 @@
+### Feature Engineering Suggestions
+
+| Feature Name             | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                                             |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / curb-weight`                                             | Critical performance metric: Higher ratios indicate better acceleration and handling, directly influencing price and desirability.           | EDA shows strong correlation between horsepower and price. Combining with curb-weight (key efficiency/performance factor) quantifies dynamic performance beyond raw power. |
+| **Fuel Efficiency Gap**   | `highway-mpg - city-mpg`                                               | Highlights drivetrain optimization: Larger gaps indicate engines optimized for highway cruising (e.g., diesels), affecting buyer preferences. | EDA reveals diesel engines (high compression) behave differently. This feature captures efficiency adaptability across driving conditions.                               |
+| **Cylinder Efficiency**   | `horsepower / num-of-cylinders`                                        | Measures engineering sophistication: High values indicate advanced tech (e.g., turbocharging), justifying price premiums.                    | Turbocharged engines (aspiration=turbo) show higher horsepower. Normalizing by cylinders isolates engineering efficiency from sheer size.                              |
+| **Size Index**            | `(length * width * height) / 1000`                                     | Represents interior volume and stability: Larger vehicles command higher prices and influence safety perceptions.                            | Strong correlation between dimensions/weight in EDA. This aggregate metric better captures spatial utility than individual dimensions.                                  |
+| **High-Risk Safety Flag** | `1 if normalized-losses > 200 else 0`                                  | Identifies safety outliers for insurance/risk models: Vehicles with losses >200 are actuarially high-risk.                                   | EDA flags normalized-losses >200 as extreme values. This binary feature isolates high-risk vehicles for targeted analysis.                                              |
+| **Performance Engine Flag**| `1 if (aspiration = 'turbo') and (horsepower > 150) else 0`            | Tags high-performance configurations: Turbocharged engines with >150HP are premium segments affecting price and insurance.                   | EDA notes turbo linkage to higher horsepower. Combining both isolates true performance models (e.g., sports cars).                                                    |
+| **Diesel Compression Flag**| `1 if (compression-ratio > 15) or (fuel-type = 'diesel') else 0`       | Flags diesel/high-efficiency engines: High compression ratios (≥15) define distinct efficiency/performance characteristics.                 | Anomaly at compression-ratio=23 (diesel trait). This feature groups diesel-specific engineering for better modeling.                                                  |
+| **Footprint Ratio**       | `wheel-base / (length * width)`                                        | Measures stability vs. maneuverability: Lower ratios indicate agile handling; higher ratios imply highway stability.                         | Wheel-base correlates with length/width. This ratio captures design trade-offs affecting driver experience and safety.                                                  |
+
+### External Enrichment Suggestions
+| Feature Name          | Formula/Enrichment Source                                     | Justification                                                                 | Reasoning Chain                                                                                                                               |
+|-----------------------|---------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Brand Tier**        | Map `make` to [luxury, mainstream, economy] via KBB/Edmunds   | Luxury brands (e.g., Porsche) command price premiums; economy brands prioritize efficiency. Critical for market segmentation. | EDA shows price strongly correlates with make. External tier data contextualizes brand positioning beyond raw names.                         |
+| **Safety Rating**     | NHTSA/IIHS crash-test scores joined via `make` and model year | Explains insurance metrics (`symboling`, `normalized-losses`) and consumer safety preferences.                                              | High normalized-losses values lack context. Official safety ratings provide objective validation for risk modeling.                          |
+| **Vehicle Class**     | NHTSA classification using `body-style` + `curb-weight`       | Standardizes segments (e.g., SUV, sports car) affecting pricing, regulations, and consumer behavior.                                        | Current body-style lacks granularity (e.g., "sedan" spans compacts to luxury). Weight-based classes improve market trend analysis.           |
+
+---
+
+### Rationale Summary
+- **Performance & Efficiency**:  
+  Features like **Power-to-Weight Ratio** and **Cylinder Efficiency** quantify engineering trade-offs between power and fuel economy (EDA shows negative correlation between horsepower and MPG). **Diesel Compression Flag** isolates high-efficiency engines.
+
+- **Safety & Risk**:  
+  **High-Risk Safety Flag** and **Safety Rating** enrichment target actuarial insights. EDA confirms extreme `normalized-losses` values correlate with risk ratings (`symboling`).
+
+- **Market Segmentation**:  
+  **Brand Tier** and **Vehicle Class** provide context for pricing outliers (e.g., luxury brands or sports cars like rear-engine vehicles). EDA notes Porsche's association with high prices.
+
+- **Design & Usability**:  
+  **Size Index** and **Footprint Ratio** capture spatial and stability characteristics beyond raw dimensions, aligning with EDA correlations between size/weight.

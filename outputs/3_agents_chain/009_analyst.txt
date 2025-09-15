@@ -1,0 +1,188 @@
+### 1. Variable Explanations
+
+1. **symboling** (int64)  
+   - Meaning: Insurance risk rating (-3 = lowest risk, 3 = highest risk). Reflects vehicle safety/claim likelihood.  
+   - Type: Ordinal integer.  
+   - Distribution: Mean 0.83, std 1.25. Slight right skew (0.21). Most vehicles cluster at 0–2 (neutral risk).  
+
+2. **normalized-losses** (float64)  
+   - Meaning: Relative average loss payment (insurance claims) scaled to 100. Higher = worse safety/theft record.  
+   - Type: Continuous numerical.  
+   - Missing: 41 (20%). Range 65–256.  
+   - Distribution: Mean 122, std 35.4. Right-skewed (0.77). Mode=161 suggests common high-loss vehicles.  
+
+3. **make** (object)  
+   - Meaning: Vehicle manufacturer (e.g., Toyota, BMW).  
+   - Type: Nominal categorical.  
+   - Distribution: Toyota most frequent (32/205), Nissan second (18).  
+
+4. **fuel-type** (object)  
+   - Meaning: Engine fuel type (diesel/gas).  
+   - Type: Binary categorical.  
+   - Distribution: Gas dominates (185 vs. 20 diesel).  
+
+5. **aspiration** (object)  
+   - Meaning: Air intake system (standard/turbocharged).  
+   - Type: Binary categorical.  
+   - Distribution: Standard common (168), turbo less frequent (37).  
+
+6. **num-of-doors** (Int64)  
+   - Meaning: Number of doors (2 or 4).  
+   - Type: Ordinal categorical.  
+   - Missing: 2.  
+   - Distribution: 4 doors prevalent (mode=4, 75th percentile=4).  
+
+7. **body-style** (object)  
+   - Meaning: Vehicle body design (sedan, hatchback, etc.).  
+   - Type: Nominal categorical.  
+   - Distribution: Sedan most common (96/205), hatchback second (70).  
+
+8. **drive-wheels** (object)  
+   - Meaning: Drivetrain type (fwd=front-wheel, rwd=rear-wheel, 4wd=all-wheel).  
+   - Type: Nominal categorical.  
+   - Distribution: fwd dominant (120/205), rwd next (76).  
+
+9. **engine-location** (object)  
+   - Meaning: Engine placement (front/rear).  
+   - Type: Binary categorical.  
+   - Distribution: Near-universal front placement (202/205). Rear engines rare (3).  
+
+10. **wheel-base** (float64)  
+    - Meaning: Distance between front/rear axles (inches). Impacts stability/space.  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 98.8, std 6.02. Right-skewed (1.05). Mode=94.5 (compact vehicles).  
+
+11. **length** (float64)  
+    - Meaning: Overall vehicle length (inches).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 174.0, std 12.3. Symmetric (skew 0.16).  
+
+12. **width** (float64)  
+    - Meaning: Overall vehicle width (inches).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 65.9, std 2.15. Right-skewed (0.90).  
+
+13. **height** (float64)  
+    - Meaning: Overall vehicle height (inches).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 53.7, std 2.44. Symmetric (skew 0.06).  
+
+14. **curb-weight** (float64)  
+    - Meaning: Vehicle weight without occupants/cargo (lbs).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 2555.6, std 520.7. Right-skewed (0.68).  
+
+15. **engine-type** (object)  
+    - Meaning: Engine design (e.g., ohc=overhead cam, dohc=dual overhead cam).  
+    - Type: Nominal categorical.  
+    - Distribution: ohc most common (148/205).  
+
+16. **num-of-cylinders** (Int64)  
+    - Meaning: Engine cylinder count.  
+    - Type: Ordinal categorical.  
+    - Distribution: Strong right skew (2.82). Mode=4 cylinders (typical). 12-cylinder outliers.  
+
+17. **engine-size** (float64)  
+    - Meaning: Engine displacement volume (cubic inches).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 126.9, std 41.6. Highly right-skewed (1.95). Max=326 (performance outliers).  
+
+18. **fuel-system** (object)  
+    - Meaning: Fuel delivery system (e.g., mpfi=multi-port injection).  
+    - Type: Nominal categorical.  
+    - Distribution: mpfi most frequent (94/205).  
+
+19. **bore** (float64)  
+    - Meaning: Cylinder diameter (inches).  
+    - Type: Continuous numerical.  
+    - Missing: 4. Range 2.54–3.94.  
+    - Distribution: Symmetric (skew 0.02).  
+
+20. **stroke** (float64)  
+    - Meaning: Piston travel distance (inches).  
+    - Type: Continuous numerical.  
+    - Missing: 4. Range 2.07–4.17.  
+    - Distribution: Left-skewed (-0.68).  
+
+21. **compression-ratio** (float64)  
+    - Meaning: Engine efficiency metric (higher = more power/efficiency).  
+    - Type: Continuous numerical.  
+    - Distribution: Extreme right skew (2.61). Max=23 (diesel outliers; gasoline typically 8–12).  
+
+22. **horsepower** (float64)  
+    - Meaning: Engine power output (HP).  
+    - Type: Continuous numerical.  
+    - Missing: 2. Range 48–288.  
+    - Distribution: Right-skewed (1.39). Max=288 (high-performance outliers).  
+
+23. **peak-rpm** (float64)  
+    - Meaning: RPM at max power output.  
+    - Type: Continuous numerical.  
+    - Missing: 2. Range 4150–6600.  
+    - Distribution: Symmetric (skew 0.07). Mode=5500.  
+
+24. **city-mpg** (int64)  
+    - Meaning: City fuel efficiency (miles per gallon).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 25.2, std 6.5. Right-skewed (0.66).  
+
+25. **highway-mpg** (int64)  
+    - Meaning: Highway fuel efficiency (miles per gallon).  
+    - Type: Continuous numerical.  
+    - Distribution: Mean 30.8, std 6.9. Right-skewed (0.54).  
+
+26. **price** (float64)  
+    - Meaning: Retail price (USD).  
+    - Type: Continuous numerical.  
+    - Missing: 4. Range $5,118–$45,400.  
+    - Distribution: High right skew (1.81). Luxury outliers (max=$45,400).  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies
+
+- **Strong Correlations**:  
+  - **Positive**: `engine-size` ↔ `horsepower` (larger engines = more power), `curb-weight` ↔ `length`/`width` (heavier vehicles are larger), `horsepower` ↔ `price` (high-performance vehicles cost more).  
+  - **Negative**: `city-mpg`/`highway-mpg` ↔ `engine-size`/`horsepower` (efficiency drops with power/size), `mpg` ↔ `curb-weight` (heavier = less efficient).  
+  - Drive dynamics: `rwd` (rear-wheel drive) common in high-`horsepower`/`price` vehicles (e.g., sports cars).  
+
+- **Anomalies**:  
+  - **Compression-ratio**: Max=23 (typical max for gasoline is 12; likely diesel engines). Verify with `fuel-type`.  
+  - **Engine-size**: 12-cylinder outliers (`num-of-cylinders`=12) correlate with max `horsepower` (288) and `price` ($45,400).  
+  - **Engine-location**: 3 rear-engine vehicles (unusual; likely high-performance models).  
+  - **Symboling**: -3 to 3 range, but mean=0.83 suggests dataset leans toward higher-risk vehicles.  
+
+- **Missing Data Clusters**:  
+  - `normalized-losses` missing 20% of values—may correlate with rare makes/engine types.  
+  - `price`, `bore`, `stroke` missing 4 records each—check if same vehicles (e.g., prototypes/exotics).  
+
+---
+
+### 3. Enrichment Recommendations
+
+1. **Safety Ratings** (e.g., NHTSA/IIHS):  
+   - Link via `make`/`body-style` to explain `symboling` and `normalized-losses`.  
+   - Add columns: `crash-test-rating`, `theft-rate`.  
+
+2. **Environmental Data** (e.g., EPA):  
+   - Augment `mpg` with `CO2-emissions` (grams/mile) or `fuel-cost-annual`.  
+   - Map `engine-type`/`fuel-system` to emission standards (e.g., Euro norms).  
+
+3. **Vehicle Class Segmentation**:  
+   - Add `vehicle-class` (e.g., SUV, compact) using `length`/`curb-weight` thresholds to group analysis.  
+
+4. **Market Context**:  
+   - Join sales data (e.g., by `make`) or depreciation rates to contextualize `price`.  
+   - Add `model-year` (missing) to track technological trends.  
+
+5. **Performance Metrics**:  
+   - Enrich with `torque` (correlates with `horsepower`) and `0-60-mph` (acceleration) for performance models.  
+   - Source: Automotive databases like Edmunds API.  
+
+6. **Geographic Data**:  
+   - Map `make` to `country-of-origin` (e.g., BMW→Germany) to analyze regional engineering trends.  
+
+**Targeted Enrichment**:  
+- For `compression-ratio` outliers: Verify diesel engines via external fuel-type specs.  
+- For rear-engine anomalies (`engine-location`): Add `model-name` (e.g., Porsche 911).  
+- For `normalized-losses`: Use IIHS theft statistics to fill missing values.

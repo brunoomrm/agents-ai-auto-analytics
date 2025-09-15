@@ -1,0 +1,130 @@
+### 1. Variable Analysis (Individual Breakdown)
+1. **symboling** (int64):  
+   - Likely measures **insurance risk rating** (-3 = safest, 3 = riskiest).  
+   - Distribution: Slightly right-skewed (skew=0.21), mode=0. Most vehicles (50th percentile=1) are low-risk.  
+
+2. **normalized-losses** (float64):  
+   - Represents **insurance loss severity** (normalized to 65–256 scale).  
+   - Missing 20% data. Slight right skew (skew=0.77), mode=161.  
+
+3. **make** (object):  
+   - **Manufacturer** (e.g., Toyota, BMW). Toyota dominates (32/205), Nissan second (18).  
+
+4. **fuel-type** (object):  
+   - **Fuel type**: Gas (185), Diesel (20). Gas is predominant.  
+
+5. **aspiration** (object):  
+   - **Engine aspiration type**: Standard (168), Turbocharged (37).  
+
+6. **num-of-doors** (Int64):  
+   - **Door count**: Four (153), Two (50). Missing 2 entries.  
+
+7. **body-style** (object):  
+   - **Vehicle body type**: Sedan (96), Hatchback (70), Convertible (3).  
+
+8. **drive-wheels** (object):  
+   - **Drivetrain**: FWD (120), RWD (76), 4WD (9).  
+
+9. **engine-location** (object):  
+   - **Engine placement**: Front (202), Rear (3). Rear engines are rare.  
+
+10. **wheel-base** (float64):  
+    - **Distance between axles** (inches). Range: 86.6–120.9". Right-skewed (skew=1.05), mode=94.5.  
+
+11. **length** (float64):  
+    - **Vehicle length** (inches). Range: 141.1–208.1". Near-symmetric (skew=0.16).  
+
+12. **width** (float64):  
+    - **Vehicle width** (inches). Range: 60.3–72.3". Right-skewed (skew=0.90), mode=63.8.  
+
+13. **height** (float64):  
+    - **Vehicle height** (inches). Range: 47.8–59.8". Near-symmetric (skew=0.06).  
+
+14. **curb-weight** (float64):  
+    - **Weight without payload** (lbs). Range: 1,488–4,066 lbs. Right-skewed (skew=0.68), mode=2,385.  
+
+15. **engine-type** (object):  
+    - **Engine design**: OHC (148), OHCF (15). DOHCV and rotor are rare.  
+
+16. **num-of-cylinders** (Int64):  
+    - **Cylinder count**. Highly right-skewed (skew=2.82), mode=4. Twelve-cylinder engines (max=12) are outliers.  
+
+17. **engine-size** (float64):  
+    - **Engine displacement** (cubic inches). Range: 61–326. Highly right-skewed (skew=1.95), mode=92.  
+
+18. **fuel-system** (object):  
+    - **Fuel delivery system**: MPFI (94), 2BBL (66).  
+
+19. **bore** (float64):  
+    - **Cylinder diameter** (inches). Range: 2.54–3.94". Near-symmetric (skew=0.02), missing 4 entries.  
+
+20. **stroke** (float64):  
+    - **Piston travel length** (inches). Range: 2.07–4.17". Left-skewed (skew=-0.68), missing 4 entries.  
+
+21. **compression-ratio** (float64):  
+    - **Engine compression ratio**. Range: 7–23. Extreme right skew (skew=2.61). Max=23 is anomalous (typical max: 12–14 for gas engines).  
+
+22. **horsepower** (float64):  
+    - **Engine power** (HP). Range: 48–288 HP. Right-skewed (skew=1.39), mode=68. Missing 2 entries.  
+
+23. **peak-rpm** (float64):  
+    - **Max power RPM**. Range: 4,150–6,600 RPM. Near-symmetric (skew=0.07), mode=5,500. Missing 2 entries.  
+
+24. **city-mpg** (int64):  
+    - **City fuel efficiency** (miles/gallon). Range: 13–49 MPG. Right-skewed (skew=0.66), mode=31.  
+
+25. **highway-mpg** (int64):  
+    - **Highway fuel efficiency** (miles/gallon). Range: 16–54 MPG. Right-skewed (skew=0.54), mode=25.  
+
+26. **price** (float64):  
+    - **Retail price** (USD). Range: $5,118–$45,400. Highly right-skewed (skew=1.81), mode=$5,572. Missing 4 entries.  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies  
+- **Strong Correlations**:  
+  - **Size ↔ Weight**: `wheel-base`, `length`, `width`, and `curb-weight` correlate positively (e.g., larger dimensions = higher weight).  
+  - **Engine ↔ Performance**: `engine-size`, `horsepower`, and `num-of-cylinders` correlate (e.g., 12-cylinder engines have max `engine-size`=326).  
+  - **Efficiency ↔ Performance**: `city-mpg`/`highway-mpg` negatively correlate with `engine-size` (r ≈ -0.7) and `horsepower` (r ≈ -0.8).  
+  - **Price Drivers**: `price` correlates with `engine-size` (r ≈ 0.9), `horsepower` (r ≈ 0.8), and luxury features (e.g., RWD, turbo).  
+
+- **Anomalies**:  
+  - **compression-ratio=23**: Physically implausible for standard engines; likely diesel (diesel avg: 15–23) or data error.  
+  - **Rare Values**: Rear-engine cars (3), twelve-cylinder engines (outliers in `num-of-cylinders`), and turbocharged engines (only 37).  
+  - **Missing Data**: `normalized-losses` (20% missing) and `price` (4 missing) limit analysis.  
+
+- **Trends**:  
+  - Most cars are FWD, gas-powered sedans/hatchbacks with 4-cylinder OHC engines.  
+  - High-performance cars (e.g., turbo, RWD, >6 cylinders) command premium prices.  
+
+---
+
+### 3. Enrichment Recommendations  
+1. **Safety Ratings** (e.g., NHTSA/IIHS):  
+   - Link via `make` to explain `symboling` (risk rating).  
+   - Adds context for insurance and pricing.  
+
+2. **Emissions Data** (e.g., EPA):  
+   - Add CO₂ emissions linked to `fuel-type` and `engine-size`.  
+   - Explains environmental impact and regulatory compliance.  
+
+3. **Vehicle Class Segmentation**:  
+   - Add "vehicle class" (e.g., SUV, luxury) using `curb-weight` and `body-style`.  
+   - Enables market-segment analysis (e.g., luxury vs. economy).  
+
+4. **Geographical/Market Data**:  
+   - Add "country of origin" for `make` (e.g., Germany for BMW).  
+   - Reveals regional trends in design (e.g., European = RWD-heavy).  
+
+5. **Technical Specifications**:  
+   - Add "torque" (lb-ft) to complement `horsepower` and `peak-rpm`.  
+   - Add "transmission type" (automatic/manual) to refine efficiency analysis.  
+
+6. **Economic Indicators**:  
+   - Add "inflation-adjusted price" using historical CPI data.  
+   - Normalizes `price` for temporal comparisons.  
+
+**Targeted Enrichment for Gaps**:  
+- Resolve `normalized-losses` gaps via IIHS insurance databases.  
+- Impute missing `price`/`bore`/`stroke` using make/model averages.  
+- Validate `compression-ratio` outliers with engine-type data (diesel vs. gas).

@@ -1,0 +1,137 @@
+### 1. Individual Variable Analysis  
+1. **symboling** (int64):  
+   - **Meaning**: Insurance risk rating (-3 = lowest risk, 3 = highest risk). Reflects vehicle safety/claim likelihood.  
+   - **Distribution**: Slight positive skew (0.21); mode=0. Range (-3 to 3) suggests balanced risk categories.  
+
+2. **normalized-losses** (float64):  
+   - **Meaning**: Relative average loss payment per insured vehicle (higher = worse safety). Units: Arbitrary normalized scale.  
+   - **Distribution**: 20% missing. Slight positive skew (0.77); mean=122 ±35.4.  
+
+3. **make** (object):  
+   - **Meaning**: Vehicle manufacturer (e.g., Toyota, BMW).  
+   - **Categories**: 22 brands; Toyota most frequent (32/205).  
+
+4. **fuel-type** (object):  
+   - **Meaning**: Engine fuel type.  
+   - **Categories**: Gas (185), diesel (20). Dominant: gas.  
+
+5. **aspiration** (object):  
+   - **Meaning**: Air intake method.  
+   - **Categories**: Standard (168), turbocharged (37).  
+
+6. **num-of-doors** (Int64):  
+   - **Meaning**: Total doors.  
+   - **Categories**: Two or four. Mode=four. Missing 2 values.  
+
+7. **body-style** (object):  
+   - **Meaning**: Vehicle body design.  
+   - **Categories**: Sedan (96), hatchback (70), convertible, wagon, hardtop.  
+
+8. **drive-wheels** (object):  
+   - **Meaning**: Powertrain wheels.  
+   - **Categories**: FWD (120), RWD (76), 4WD (9).  
+
+9. **engine-location** (object):  
+   - **Meaning**: Engine placement.  
+   - **Categories**: Front (202), rear (3). Extreme imbalance.  
+
+10. **wheel-base** (float64):  
+    - **Meaning**: Distance between front/rear axles (inches). Affects stability.  
+    - **Distribution**: Mean=98.8 ±6.02; positive skew (1.05). Range: 86.6–120.9.  
+
+11. **length** (float64):  
+    - **Meaning**: Overall vehicle length (inches).  
+    - **Distribution**: Near-normal (skew=0.16); mean=174.0 ±12.3.  
+
+12. **width** (float64):  
+    - **Meaning**: Vehicle width (inches).  
+    - **Distribution**: Positive skew (0.90); mean=65.9 ±2.15.  
+
+13. **height** (float64):  
+    - **Meaning**: Vehicle height (inches).  
+    - **Distribution**: Near-normal (skew=0.06); mean=53.7 ±2.44.  
+
+14. **curb-weight** (float64):  
+    - **Meaning**: Empty vehicle weight (pounds). Key for efficiency/performance.  
+    - **Distribution**: Slight positive skew (0.68); mean=2555 ±520.7.  
+
+15. **engine-type** (object):  
+    - **Meaning**: Engine design.  
+    - **Categories**: OHC (148), OHCF (15), others. OHC dominant.  
+
+16. **num-of-cylinders** (Int64):  
+    - **Meaning**: Engine cylinder count.  
+    - **Distribution**: High skew (2.82); mode=4. Outlier: twelve-cylinder engines.  
+
+17. **engine-size** (float64):  
+    - **Meaning**: Engine displacement (likely cc).  
+    - **Distribution**: Strong positive skew (1.95); max=326 (outlier). Mean=126.9 ±41.6.  
+
+18. **fuel-system** (object):  
+    - **Meaning**: Fuel delivery mechanism.  
+    - **Categories**: MPFI (94), 2BBL (66), others.  
+
+19. **bore** (float64):  
+    - **Meaning**: Cylinder diameter (inches).  
+    - **Distribution**: Near-normal (skew=0.02); mean=3.33 ±0.27. Missing 4 values.  
+
+20. **stroke** (float64):  
+    - **Meaning**: Piston travel distance (inches).  
+    - **Distribution**: Negative skew (-0.68); mean=3.26 ±0.32. Missing 4 values.  
+
+21. **compression-ratio** (float64):  
+    - **Meaning**: Engine efficiency metric (higher = more power/efficiency).  
+    - **Distribution**: Extreme skew (2.61); max=23 (diesel outlier). Mean=10.1 ±3.97.  
+
+22. **horsepower** (float64):  
+    - **Meaning**: Engine power output.  
+    - **Distribution**: High skew (1.39); max=288 (performance outlier). Missing 2 values.  
+
+23. **peak-rpm** (float64):  
+    - **Meaning**: RPM at max horsepower.  
+    - **Distribution**: Near-normal (skew=0.07); mean=5125 ±479. Missing 2 values.  
+
+24. **city-mpg** (int64):  
+    - **Meaning**: Urban fuel efficiency (miles/gallon).  
+    - **Distribution**: Positive skew (0.66); mean=25.2 ±6.54.  
+
+25. **highway-mpg** (int64):  
+    - **Meaning**: Highway fuel efficiency (miles/gallon).  
+    - **Distribution**: Positive skew (0.54); mean=30.8 ±6.89.  
+
+26. **price** (float64):  
+    - **Meaning**: Retail price (USD).  
+    - **Distribution**: High skew (1.81); max=$45,400 (luxury outlier). Missing 4 values.  
+
+---
+
+### 2. Key Trends, Correlations, and Anomalies  
+- **Strong Correlations**:  
+  - Positive: `engine-size` ↔ `horsepower` (larger engines = more power), `curb-weight` ↔ `length`/`width` (larger dimensions = heavier).  
+  - Negative: `city-mpg`/`highway-mpg` ↔ `engine-size`/`horsepower` (powerful engines = lower efficiency).  
+- **Anomalies**:  
+  - `compression-ratio=23` (diesel outlier; typical range 7–12 for gasoline).  
+  - `num-of-cylinders=12` (rare luxury/performance engines).  
+  - `engine-location=rear` (only 3 vehicles, e.g., Porsche 911).  
+- **Trends**:  
+  - Turbocharged (`aspiration=turbo`) vehicles show higher `horsepower` (avg 123 vs. 98 for `std`).  
+  - RWD (`drive-wheels=rwd`) linked to higher `price` (avg $18,200 vs. $10,100 for FWD).  
+
+---
+
+### 3. Enrichment Recommendations  
+1. **Safety Ratings** (e.g., NHTSA/IIHS):  
+   - Map to `symboling`/`normalized-losses` to validate risk scores.  
+   - Source: Public crash-test databases (join by `make` and `body-style`).  
+2. **Emissions Data** (CO₂/tailpipe pollutants):  
+   - Augment `fuel-type` and `mpg` columns for environmental impact analysis.  
+   - Source: EPA datasets (match via `engine-size` and `fuel-system`).  
+3. **Vehicle Class/Category** (e.g., SUV, sports car):  
+   - Derive from `body-style`/`curb-weight` to segment analysis (e.g., luxury vs. economy).  
+   - Source: Market databases (e.g., Edmunds) mapped to `make`.  
+4. **Market Metrics** (e.g., depreciation, sales volume):  
+   - Enhance `price` analysis with resale value trends.  
+   - Source: Automotive industry reports (join by `make` and model year).  
+5. **Geographic Data** (e.g., regional fuel prices):  
+   - Contextualize `mpg` by fuel cost (e.g., diesel vs. gas prices).  
+   - Source: Energy Information Administration (EIA) data.

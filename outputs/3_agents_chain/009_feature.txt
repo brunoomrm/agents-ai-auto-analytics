@@ -1,0 +1,30 @@
+### Feature Engineering Suggestions
+
+| Feature Name             | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                                               |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / curb_weight`                                              | Critical performance metric: Higher ratios indicate better acceleration and handling, directly impacting desirability and price.             | EDA shows strong correlation between horsepower/price and weight/MPG. This ratio quantifies performance efficiency beyond raw power.                                         |
+| **Fuel Economy Gap**      | `highway_mpg - city_mpg`                                                | Highlights drivetrain optimization: Larger gaps indicate highway-optimized designs (e.g., sports cars), smaller gaps favor city driving.     | Negative MPG/engine-size correlation suggests this reveals engineering trade-offs. Highway MPG averages 5.6 higher than city MPG (EDA).                                      |
+| **Engine Efficiency Index**| `(bore² * stroke * num_of_cylinders) / engine_size`                     | Measures internal combustion efficiency: Values >1 indicate oversquare engines (high-RPM power), <1 indicates undersquare (torque-focused). | Bore/stroke symmetry (EDA) and cylinder count outliers motivate this physics-based design metric. Formula reflects actual displacement calculation.                         |
+| **Premium Drivetrain Flag**| `1 if (drive_wheels == 'rwd') and (aspiration == 'turbo') else 0`       | Flags performance-oriented configurations common in luxury/sports cars (e.g., BMW M-series), which command price premiums.                 | EDA links RWD/turbo to high horsepower/price. Only 15% of vehicles have this combo, aligning with luxury segment.                                                          |
+| **Safety Mass Index**     | `curb_weight * length`                                                  | Proxy for crash safety: Heavier/longer vehicles absorb impact better, reducing insurance risk (symboling).                                | EDA shows curb-weight/length correlation (r>0.8). IIHS data confirms size/weight reduce injury likelihood (external enrichment justification).                             |
+| **Diesel Compression Flag**| `compression_ratio if fuel_type == 'diesel' else 0`                     | Isolates diesel engines' high compression (15-23:1), which boost efficiency but increase manufacturing cost.                               | Compression-ratio max=23 (EDA anomaly) aligns with diesel engines. Separating diesel compression explains price/efficiency outliers.                                        |
+| **Size Class**            | `'Compact' if length<170 and width<66 else 'Standard' if length<190 else 'Large'` | Market segmentation: Size classes affect pricing tiers, fuel efficiency, and consumer preferences.                                        | Length/width skew (EDA) reveals distinct size clusters. External EPA classes validate this grouping (enrichment).                                                          |
+| **Cylinder Efficiency**   | `horsepower / num_of_cylinders`                                         | Power output per cylinder: Measures engineering refinement. High values indicate advanced tech (e.g., turbocharging), justifying price hikes. | 12-cylinder outliers (EDA) have lower per-cylinder output than turbocharged 6-cylinders. Reveals engineering trade-offs beyond raw cylinder count.                      |
+
+---
+
+### Key Rationale Summary
+- **Performance & Market Positioning**:  
+  **Power-to-Weight Ratio** and **Premium Drivetrain Flag** target performance-oriented buyers. EDA confirms these correlate with price premiums (e.g., RWD/turbo vehicles average 47% higher horsepower).  
+
+- **Efficiency Insights**:  
+  **Engine Efficiency Index** and **Cylinder Efficiency** decode engineering trade-offs between power, fuel economy, and cost. The 23:1 **Diesel Compression Flag** explains anomalous high-efficiency diesel outliers.  
+
+- **Safety & Risk**:  
+  **Safety Mass Index** leverages physics (size/weight → crash safety) to explain insurance risk (symboling). External IIHS data validates this relationship.  
+
+- **Market Segmentation**:  
+  **Size Class** and **Fuel Economy Gap** reflect consumer use cases (e.g., highway-optimized large cars vs. city-focused compacts), aligning with EPA classifications.  
+
+- **Anomaly Exploitation**:  
+  Features like **Diesel Compression Flag** directly address EDA-identified outliers, turning data quirks into predictive signals. External enrichment (IIHS/EPA) is recommended where domain knowledge gaps exist.

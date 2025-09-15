@@ -1,0 +1,24 @@
+### Explanation for the Specific Car Prediction  
+**Why did the model predict $13,596 instead of the actual $10,945?**  
+The model estimated a higher price primarily because of the car's **rotor engine type** (a less common, specialized engine often found in performance models) and the **Mazda brand** (which typically holds decent value). However, other key features like the **small engine size (70.0)**, **modest horsepower (101)**, and **average highway fuel efficiency (23 MPG)** usually make a car *less* expensive.  
+
+The model likely overvalued this car because:  
+- **"Rotor" engines are rare** and historically linked to higher-priced sports models (e.g., Mazda RX-series).  
+- The model has limited data on such engines, making predictions for these cars **less reliable**.  
+
+In short: The rotor engine and Mazda brand pushed the prediction up, but real-world factors (like age, condition, or mileage not fully captured by the model) may explain why the actual price was lower.  
+
+---
+
+### What the Overall Metrics Mean for You  
+The model’s performance shows it’s **generally reliable but not perfect**:  
+- **Typical prediction error (RMSE): ~$3,000**  
+  - For a $10,000 car, the model might predict between $7,000–$13,000. Use this as a *starting point* for pricing decisions.  
+- **Explanatory power (R²): 88%**  
+  - The model captures **most factors affecting prices** (like engine specs, brand, fuel efficiency). This gives high confidence for common cars but less so for rare models (e.g., rotor engines).  
+
+**For buyers/sellers**:  
+- Predictions are **most trustworthy for mainstream cars** with common features.  
+- Always double-check predictions for unusual specs (e.g., rotor engines) with real-world data.  
+
+Let me know if you’d like to test another example!

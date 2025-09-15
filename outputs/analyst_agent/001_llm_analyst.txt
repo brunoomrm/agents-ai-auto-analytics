@@ -1,0 +1,121 @@
+### Variable Semantic Analysis:
+1. **symboling**  
+   - Measures vehicle insurance risk rating (-3=low risk, 3=high risk).  
+   - Trend: Mean ~0.83 (neutral risk), slight right skew. Most vehicles cluster at 0-2.
+
+2. **normalized-losses**  
+   - Likely insurance loss severity (higher=greater damage costs).  
+   - Missing 20% data; range 65-256. Right-skewed (skew=0.77), suggesting some high-loss outliers.
+
+3. **make**  
+   - Vehicle manufacturer. Toyota dominates (32 entries), followed by Nissan (18). Rare brands: Jaguar, Porsche.
+
+4. **fuel-type**  
+   - Gas (90.2%) vs. diesel (9.8%). Diesel vehicles likely correlate with higher compression ratios.
+
+5. **aspiration**  
+   - Turbocharged (18%) vs. standard (82%). Turbos may link to higher horsepower/price.
+
+6. **num-of-doors**  
+   - Majority 4-door (75.4% of non-missing). Missing 2 values.
+
+7. **body-style**  
+   - Sedans (46.8%) and hatchbacks (34.1%) dominate. Rare: convertibles (e.g., alfa-romero samples).
+
+8. **drive-wheels**  
+   - FWD (58.5%), RWD (37.1%), 4WD (4.4%). RWD may correlate with sportier models.
+
+9. **engine-location**  
+   - Rear-engine (1.5%) are outliers (e.g., Porsche 911).
+
+10. **Dimensions (wheel-base, length, width, height)**  
+    - All right-skewed. Larger dimensions correlate with curb-weight (r≈0.9 expected).
+
+11. **curb-weight**  
+    - Vehicle weight (1488-4066 lbs). Right-skewed; heavier vehicles likely have larger engines.
+
+12. **engine-type**  
+    - OHV (72.2%) dominant. Rotary engines (rotor) are rare (e.g., Mazda RX-7).
+
+13. **num-of-cylinders**  
+    - Strong right skew (kurtosis=13.7): 4-cyl (mode), but 12-cyl outliers (e.g., luxury cars).
+
+14. **engine-size**  
+    - Right-skewed (skew=1.95); max 326 (high-performance). Correlates with horsepower (expected r>0.8).
+
+15. **fuel-system**  
+    - MPFI (45.9%) and 2BBL (32.2%) dominate. Direct injection (e.g., SPDI) may improve mpg.
+
+16. **bore/stroke**  
+    - Bore symmetric; stroke left-skewed. High bore/stroke ratio = high-revving engines.
+
+17. **compression-ratio**  
+    - Extreme right skew (skew=2.61). Max 23 suggests diesel outliers (diesel avg: 16-23).
+
+18. **horsepower**  
+    - Right-skewed (skew=1.39); 288 HP outliers (sports cars). Missing 2 values.
+
+19. **peak-rpm**  
+    - Normally distributed; typical range 4800-5500 RPM.
+
+20. **mpg metrics**  
+    - City-mpg (mean=25.2) and highway-mpg (mean=30.8) negatively correlate with engine-size/horsepower.
+
+21. **price**  
+    - Highly right-skewed (skew=1.81). Luxury outliers ($45k) vs. economy ($5k). Missing 4 values.
+
+---
+
+### Key Trends & Anomalies:
+- **Safety vs. Performance**:  
+  High-symboling (risky) vehicles (e.g., sports cars) have higher horsepower (e.g., sample alfa-romero: symboling=3, HP=154) but lower mpg.
+
+- **Diesel Characteristics**:  
+  Diesel vehicles (9.8%) show high compression ratios (avg ~20) but lower horsepower.
+
+- **Outliers**:  
+  - 12-cylinder engines (e.g., Ferrari/Lamborghini) with high price/HP.  
+  - Rear-engine cars (3 samples) with exceptional performance.  
+  - Compression ratio=23 (diesel) and horsepower=288 (supercar).  
+  - Low mpg outliers (city-mpg=13): heavy vehicles with large engines.
+
+- **Correlations**:  
+  - Strong positive: engine-size ↔ horsepower ↔ price ↔ curb-weight.  
+  - Strong negative: engine-size ↔ mpg.  
+  - Expected: turbo (aspiration) → higher horsepower.  
+
+---
+
+### Data Enrichment Suggestions:
+1. **Safety Ratings**  
+   - Enrich `symboling` with IIHS/NHTSA crash test scores to validate risk ratings.
+
+2. **Fuel Economy Validation**  
+   - Add EPA-certified `real-world-mpg` to compare with reported `city/highway-mpg`.
+
+3. **Market Data**  
+   - Incorporate `model-year` to analyze depreciation and `price` trends.  
+   - Add `sales-figures` per `make` to identify market leaders.
+
+4. **Environmental Impact**  
+   - Append `CO2-emissions` using `fuel-type` and `engine-size` for sustainability analysis.
+
+5. **Geographic Data**  
+   - Add `country-of-origin` for `make` to explore regional engineering trends (e.g., German torque vs. Japanese efficiency).
+
+6. **Technical Specifications**  
+   - Include `torque` values to complement `horsepower` for performance analysis.  
+   - Add `fuel-tank-capacity` to calculate total range (`mpg` × `tank-size`).
+
+7. **Anomaly Explanation**  
+   - Use external data to verify outliers (e.g., 12-cylinder vehicles' `make` and `price` consistency).
+
+---
+
+### Actionable Insights:
+- Investigate missing `normalized-losses` (20%) – impute using similar `make`/`body-style` averages.  
+- Explore diesel models: High `compression-ratio` but low representation (n=20).  
+- Analyze FWD vs. RWD: Does RWD truly correlate with higher `price`/`horsepower`?  
+- Validate `peak-rpm` outliers (4150-6600) with engine redline data.  
+
+This enriched analysis would enable predictive modeling (e.g., price estimation) and segmentation (e.g., eco-friendly vs. performance vehicles).

@@ -1,0 +1,27 @@
+### Feature Engineering Suggestions
+
+| Feature Name             | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                                                                                 |
+|--------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / curb_weight`                                             | Critical for performance evaluation: higher ratio improves acceleration and driving dynamics, directly impacting price and desirability.    | EDA shows strong correlation between horsepower, engine-size, and price. Combining power with weight (a key performance metric in automotive engineering) captures efficiency beyond raw power. |
+| **Size Index**            | `length * width * height`                                              | Represents interior space and vehicle class (e.g., SUV vs. compact), influencing comfort, utility, and market positioning.                 | Dimensions (length/width/height) correlate with curb-weight. Larger volumes typically indicate premium/luxury segments, explaining price outliers. |
+| **Turbo Performance Flag**| `if aspiration == 'turbo': 1 else 0`                                    | Turbocharged engines boost power and efficiency; flags premium engineering affecting price and performance.                                 | EDA links turbo aspiration to higher horsepower and compression-ratio. Isolating turbo models helps segment performance vehicles. |
+| **Highway Efficiency Premium** | `highway_mpg - city_mpg`                                             | Measures highway driving advantage (e.g., diesel benefits). Higher values indicate optimized cruising efficiency, reducing operating costs. | Diesel vehicles (20/205) show better highway-mpg. This quantifies efficiency gains for long-distance buyers. |
+| **Cylinder Efficiency**   | `horsepower / num_of_cylinders`                                        | Indicates engine sophistication: higher values mean advanced tech (e.g., turbo/supercharging), justifying price premiums.                   | EDA notes high skew in num-of-cylinders (rare V12s). Normalizing power per cylinder reveals engineering quality beyond displacement. |
+| **Safety Footprint**      | `wheel_base * width`                                                   | Wider/longer wheelbases improve stability and crash safety, reducing insurance risk (symboling).                                            | Dimensions correlate with safety; NHTSA uses wheelbase in crash tests. Explains symboling variance and appeals to safety-conscious buyers. |
+| **Diesel Indicator**      | `if fuel_type == 'diesel': compression_ratio else 0`                   | Flags diesel engines' high compression (unique combustion process), explaining efficiency outliers and maintenance costs.                   | Compression-ratio=23 outlier aligns with diesel properties. Isolates diesel-specific traits affecting mpg and longevity. |
+| **Luxury Weight Index**   | `curb_weight / (length * width * 0.01)`                                | High values indicate dense materials (e.g., soundproofing/alloys), signaling luxury builds that command price premiums.                     | Price outliers ($45.4K) correlate with weight; luxury vehicles use heavier materials for comfort/performance. |
+
+---
+
+### Rationale Summary
+- **Performance & Efficiency**:  
+  **Power-to-Weight Ratio** and **Cylinder Efficiency** directly quantify engineering effectiveness, explaining price variations in sports/luxury vehicles. **Highway Efficiency Premium** isolates diesel advantages for cost-sensitive buyers.  
+
+- **Market Segmentation**:  
+  **Size Index** and **Luxury Weight Index** differentiate vehicle classes (e.g., compact vs. SUV) and material quality, targeting specific consumer needs. **Turbo/Diesel Flags** create subgroups for performance/efficiency niches.  
+
+- **Safety & Stability**:  
+  **Safety Footprint** leverages wheelbase-width interactions to model crash safety and drivability, aligning with insurance risk (symboling) trends.  
+
+- **Domain Insights**:  
+  Features like **Diesel Indicator** incorporate mechanical knowledge (compression-ratio differences), while **Turbo Performance Flag** captures forced-induction benefits noted in EDA. All features use existing attributes to avoid external dependencies.

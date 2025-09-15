@@ -1,0 +1,22 @@
+### Actionable Recommendations  
+
+1. **Premium Pricing for Performance Segments**  
+   Leverage the strong correlation between **engine-size/horsepower** and **price** to introduce tiered pricing for high-performance vehicles (e.g., turbocharged or horsepower >200). Target outliers like the $45,400 luxury model with performance-based premiums.  
+
+2. **Optimize Inventory for Fuel Efficiency**  
+   Prioritize **FWD** and **gas-powered** vehicles (75% of inventory) in urban markets, as they dominate the dataset and show better **city-mpg**. Use the *Highway-City MPG Gap* feature to stock highway-optimized models (e.g., diesel) in suburban/rural areas.  
+
+3. **Acquire Insurance Claims Data**  
+   Address the 20% gap in **normalized-losses** by integrating IIHS claims data (linked to **make** and **body-style**). This enables accurate risk-based pricing and validates **symboling** ratings for high-risk vehicles (e.g., turbocharged models).  
+
+4. **Develop Turbo-Diesel Niche Products**  
+   Capitalize on the link between **turbocharged aspiration**, **diesel engines**, and high **compression-ratio** (up to 23). Expand this high-torque segment using the *Turbo-Diesel Flag* feature to target luxury/off-road buyers.  
+
+5. **Enhance Data for Engine Analytics**  
+   Resolve missing **bore/stroke** (4 records) and **horsepower** (2 records) via EPA/technical partnerships. This supports *Engine Efficiency* feature calculations to differentiate engine designs (e.g., oversquare diesels).  
+
+6. **Segment Markets by Vehicle Size Class**  
+   Apply the *Size Class* feature (area in sq-ft) to align inventory with regional regulations. Target large vehicles (**length/width** correlated with **wheel-base**) for North America, compact models for Europe.  
+
+### Analytics/Data Strategy Summary  
+Focus on enriching risk (IIHS) and emissions (EPA) data to address gaps in **normalized-losses** and **engine metrics**, while deploying feature engineering (e.g., *Power-to-Weight*, *Luxury Density*) to segment high-value performance and luxury segments.

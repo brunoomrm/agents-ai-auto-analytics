@@ -1,0 +1,24 @@
+### Engineered Feature Suggestions
+
+| Feature Name          | Formula                                                                 | Justification                                                                 | Reasoning Chain                                                                 |
+|-----------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| **Power-to-Weight Ratio** | `horsepower / engine-size`                                             | Measures engine efficiency; higher ratios indicate better performance per unit displacement, influencing acceleration and fuel economy. | Engine size (cc) normalizes horsepower for fair comparison. High ratios correlate with sports cars (e.g., 154 hp/152 cc = 1.01 vs. 111 hp/130 cc = 0.85). |
+| **Stroke Ratio**      | `bore / stroke`                                                        | Classifies engine design: >1 (oversquare) favors high-RPM power, <1 (undersquare) favors torque. Affects driving feel and fuel efficiency. | Critical for engine characterization (e.g., 3.47/2.68≈1.29 = high-revving; 2.68/3.47≈0.77 = torque-oriented). |
+| **Combined MPG**      | `(city-mpg * 0.55) + (highway-mpg * 0.45)`                             | Real-world fuel efficiency estimate; weighted average reflects typical driving (55% city/45% highway). Directly impacts operating costs. | Better than simple average; explains why similar engine-size cars differ in ownership costs (e.g., 21/27 mpg → 23.7 vs. 18/22 mpg → 19.8). |
+| **Highway Efficiency Premium** | `highway-mpg - city-mpg`                                             | Highlights highway-optimized designs; larger gaps indicate aerodynamic/gearing advantages for long-distance travel. | Reveals drivetrain optimization (e.g., 30−24=6 for a sedan vs. 26−19=7 for a hatchback). |
+| **Turbo Diesel Indicator** | `1 if (fuel-type == 'diesel' and aspiration == 'turbo') else 0`      | Flags efficient high-torque engines; turbo diesels command price premiums and appeal to fuel-conscious buyers. | Combines two efficiency boosters (e.g., diesel turbo Volvo vs. gas non-turbo). |
+| **Safety Binary**     | `1 if symboling ≤ 0 else 0`                                            | Simplifies insurance risk: ≤0 = "safe", >0 = "risky". Safer cars attract families and impact resale value. | Symboling [-3,3] skews interpretation; binary split isolates low-risk vehicles (e.g., symboling -1 vs. 3). |
+| **Luxury Brand Flag** | `1 if make in ['bmw','audi','jaguar','porsche','mercedes-benz','volvo'] else 0` | Captures brand-based pricing tiers; luxury brands have higher margins and feature density. | Domain knowledge: Audi/Volvo in data command premium pricing (e.g., Audi $13.9K vs. non-luxury). |
+| **Engine Efficiency Index** | `((city-mpg + highway-mpg) / 2) / engine-size`                       | Measures miles per gallon per unit displacement; isolates efficiency from engine size. | Small efficient engines score high (e.g., 109cc/27mpg=0.25 vs. 152cc/22.5mpg=0.15). |
+| **Performance Flag**  | `1 if (horsepower > 150 and aspiration == 'turbo') else 0`             | Identifies high-performance models; turbocharged high-hp cars target enthusiasts and command premiums. | Targets niche segment (e.g., 160hp turbo Volvo vs. 114hp standard). |
+| **Aerodynamic Ratio** | `horsepower / (highway-mpg * 10)`                                      | Estimates power-to-drag relationship; higher values indicate performance-oriented aerodynamics. | Highway mpg reflects drag; 160hp/250mpg=0.64 vs. 102hp/300mpg=0.34 shows design priorities. |
+
+---
+
+### Rationale Summary
+- **Performance & Efficiency**: Features like **Power-to-Weight Ratio**, **Stroke Ratio**, and **Engine Efficiency Index** quantify engineering trade-offs between power and fuel economy. These help segment vehicles (e.g., economy vs. sports) and predict pricing tiers.
+- **Market Positioning**: **Luxury Brand Flag** and **Performance Flag** leverage domain knowledge to isolate high-margin segments, while **Turbo Diesel Indicator** targets a specific efficiency niche.
+- **Practical Usability**: **Combined MPG** and **Highway Efficiency Premium** translate technical specs into consumer-centric metrics for operating costs. **Safety Binary** simplifies insurance data for broader interpretability.
+- **Aerodynamic/Design Insights**: **Aerodynamic Ratio** links power and highway efficiency to expose design priorities (e.g., sports cars sacrifice mpg for speed).
+
+These features enrich predictive modeling by capturing nonlinear interactions (e.g., turbo + diesel) and providing physics-based (stroke ratio) and economic (MPG) interpretability.
