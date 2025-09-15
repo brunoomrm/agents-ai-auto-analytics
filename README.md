@@ -31,7 +31,6 @@ outputs/
     decision_agent/
     2_agents_chain/
     3_agents_chain/
-.env
 .gitignore
 requirements.txt
 eda_classic_ml.ipynb
