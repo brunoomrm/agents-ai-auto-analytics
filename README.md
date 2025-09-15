@@ -4,10 +4,12 @@
    
 2. **Set up your OpenRouter API key** in a `.env` file or environment variable.
 3. **Launch and run notebooks**
-- `eda_classic_ml.ipynb:` Classical ML/EDA workflow (no LLMs agent) - Using XGBoost
+- `eda_classic_ml.ipynb:` Classical ML/EDA workflow (no LLMs agent) 
 - `separate_agents.ipynb:` Run Data Analyst, Feature Engineer and Explainer agents independently
-- `two_agent_chain.ipynb:` Chain Data Analyst → Feature Engineering agent (LangChain) +  Training XGBoost + predictions + Explainer agent to explain predictions
-- `three_agent_chain.ipynb:` Full orchestration: Analyst → Feature Engineer → Decision Support +  Training XGBoost + predictions + Explainer Agent to explain predictions
+- `two_agent_chain.ipynb:` Chain Data Analyst → Feature Engineering agent (LangChain) + Explainer agent to explain predictions
+- `three_agent_chain.ipynb:` Full orchestration: Analyst → Feature Engineer → Decision Support  + Explainer Agent to explain predictions
+
+In each notebook, XGBoost models were trained and used to make predictions. These predictions were explained by the Explainer agent.
 
 4. **Model and agent outputs** are auto-saved in the `outputs/` directory, indexed by id workflow run. e.g filename outputs/xyz_agent/00x_agentname.txt
 
