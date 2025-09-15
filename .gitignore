@@ -1,0 +1,29 @@
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Dependency directories
+node_modules/
+venv/
+.env/
+
+# Build / Dist
+dist/
+build/
+out/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs / Env
+*.log
+.env.local
+.env.*
